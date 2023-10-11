@@ -1,11 +1,11 @@
-INSERT INTO products(p_id, product_name)
+INSERT INTO products(pid, productname)
 VALUES
     (1, 'Wall Tiles'),
     (2, 'Floor Tiles'),
     (3, 'Sanitary and CP Fittings'),
     (4, 'Granite and Marbles');
 
-INSERT INTO sizes(s_id,sizes)
+INSERT INTO sizes(sid,sizes)
 VALUES
     (1,'12×18inch'),
     (2,'24×12inch'),
@@ -15,7 +15,7 @@ VALUES
     (6,'12×12inch'),
     (7,'16×16inch');
 
-INSERT INTO rooms(room_id,room_name)
+INSERT INTO rooms(roomid,roomname)
 VALUES
     (1,'Bedroom'),
     (2,'Livingroom'),
@@ -24,7 +24,7 @@ VALUES
     (5,'Bathroom'),
     (6,'Parking');
 
-INSERT INTO cpfittings(fitting_id,fitting_name)
+INSERT INTO cpfittings(fittingid,fittingname)
 VALUES
     (1,'Single Piece Basin'),
     (2,'Two Piece Basin'),
@@ -34,7 +34,7 @@ VALUES
     (6,'Single Vacuum Commote');
 
 
-INSERT INTO product_room_size(prs_id,p_id,room_id,s_id)
+INSERT INTO productroomsize(prsid,pid,roomid,sid)
 VALUES
     (1,1,1,1),
     (2,1,1,2),
@@ -79,7 +79,7 @@ VALUES
     (41,2,6,7),
     (42,2,6,6);
 
-INSERT INTO product_fitting(p_fitting_id,p_id,fitting_id)
+INSERT INTO productfitting(pfittingid,pid,fittingid)
 VALUES
     (1,3,1),
     (2,3,2),
@@ -87,20 +87,20 @@ VALUES
     (4,3,4),
     (5,3,5);
 
-INSERT INTO granites(granite_id,category)
+INSERT INTO granites(graniteid,category)
 VALUES
     (1,'Rajasthani'),
     (2,'South Indian'),
     (3,'North Indian');
 
-INSERT INTO thick(thick_id,thick)
+INSERT INTO thick(thickid,thick)
 VALUES
     (1,'11mm'),
     (2,'13mm'),
     (3,'15mm'),
     (4,'18mm');
 
-INSERT INTO granitethick(gt_id,granite_id,thick_id,p_id)
+INSERT INTO granitethick(gtid,graniteid,thickid,pid)
 VALUES
     (1,1,1,4),
     (2,1,2,4),
