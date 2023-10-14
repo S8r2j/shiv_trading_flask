@@ -14,7 +14,7 @@ class user(db.Model):
     phonenumber = db.Column(db.String(11), unique=True, nullable=False)
     plan=db.Column(db.String(20),nullable=False)
     issuperuser=db.Column(db.Boolean, default = False)
-    login = db.relationship('login', backref = 'user', uselist= False)
+    login = db.relationship('login', backref = 'user', lazy=True)
 
 
 class login(db.Model):
@@ -61,7 +61,7 @@ class productfitting(db.Model):
     pfittingid=db.Column(db.Integer,primary_key=True)
     pid=db.Column(db.Integer,db.ForeignKey("products"))
     fittingid=db.Column(db.Integer,db.ForeignKey("cpfittings"))
-    photoaddress=db.relationship('cpphotos', backref='productfitting', uselist=False)
+    photoaddress=db.relationship('cpphotos', backref='productfitting', lazy=True)
 
 
 class cpphotos(db.Model):
@@ -85,7 +85,7 @@ class granitethick(db.Model):
     graniteid=db.Column(db.Integer,db.ForeignKey("granites"))
     thickid=db.Column(db.Integer,db.ForeignKey("thick"))
     pid=db.Column(db.Integer,db.ForeignKey("products"))
-    photoaddress=db.relationship('granitephoto', backref='granitethick', uselist=False)
+    photoaddress=db.relationship('granitephoto', backref='granitethick', lazy=True)
 
 
 class granitephoto(db.Model):

@@ -160,8 +160,9 @@ def get_cpfitting_photos():
             if not query:
                 abort(404)
             photo= productfitting.query.join(cpfittings).filter(cpfittings.fittingname == fittingname).all()
-            for row in photo.photoaddress:
-                details.append(row.photoaddress)
+            for row in photo:
+                for photos in row.photoaddress:
+                    details.append(photos.photoaddress)
 
         return Response(
             json.dumps(details, ensure_ascii = False).encode('utf-8'), content_type = 'application/json; charset=utf-8'
@@ -220,11 +221,11 @@ def get_granite_photos():
             ).all()
             details = []
             for row in url:
-                size = thick.query.join(granitephoto).filter(
-                    granitephoto.gt_id == row.gt_id
+                size = thick.query.join(granitethick).join(granitephoto).filter(
+                    granitephoto.gtid == row.gtid
                 ).first()
                 ls = {
-                    "size": size.sizes,
+                    "size": size.thick,
                     "url": row.photoaddress
                 }
                 details.append(ls)
@@ -233,11 +234,11 @@ def get_granite_photos():
             url = granitephoto.query.join(granitethick).all()
             details = []
             for row in url:
-                size = thick.query.join(granitephoto).filter(
-                    granitephoto.gt_id == row.gt_id
+                size = thick.query.join(granitethick).join(granitephoto).filter(
+                    granitephoto.gtid == row.gtid
                 ).first()
                 ls = {
-                    "size": size.sizes,
+                    "size": size.thick,
                     "url": row.photoaddress
                 }
                 details.append(ls)
