@@ -1,4 +1,4 @@
-from routes.postroutes import app
+from routes.users import app
 
 
 if __name__ == "__main__":

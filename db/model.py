@@ -20,7 +20,7 @@ class user(db.Model):
 class login(db.Model):
     sn=db.Column(db.Integer,autoincrement=True,primary_key=True)
     id=db.Column(db.Integer,db.ForeignKey("user"),nullable=False)
-    password=db.Column(db.String(50),nullable=False)
+    password=db.Column(db.String(250),nullable=False)
 
 
 class products(db.Model):
