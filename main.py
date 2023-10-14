@@ -1,4 +1,4 @@
-from routes.get_routes import app
+from routes.postroutes import app
 
 
 if __name__ == "__main__":

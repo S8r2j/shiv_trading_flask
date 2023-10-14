@@ -168,7 +168,7 @@ def get_cpfitting_photos():
             )
 
 
-@app.get("/granite/photos/", methods = ['GET'])
+@app.route("/granite/photos/", methods = ['GET'])
 def get_granite_photos():
     granite = request.args.get('granite', default = None, type = str)
     thik = request.args.get('thick', default = None, type = str)

@@ -9,5 +9,10 @@ class Settings:
     DATABASE_USER = os.getenv('DATABASE_USER')
     DATABASE_PASSWORD = os.getenv('DATABASE_PASSWORD')
     DATABASE_PORT = os.getenv('DATABASE_PORT')
+    IMAGEKIT_PRIVATE_KEY = os.getenv('IMAGEKIT_PRIVATE_KEY')
+    IMAGEKIT_PUBLIC_KEY = os.getenv('IMAGEKIT_PUBLIC_KEY')
+    IMAGEKIT_URL = os.getenv('IMAGEKIT_URL')
+    SUPER_PASSWORD = os.getenv('SUPER_PASSWORD')
+    SUPER_USER = os.getenv('SUPER_USER')
 
 settings = Settings()
