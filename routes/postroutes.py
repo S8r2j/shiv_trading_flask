@@ -1,19 +1,10 @@
-from flask import request, abort, Response, json, jsonify
-import io
-from db.model import db, products, sizes, rooms, tilesphotos, productroomsize, cpfittings, cpphotos, productfitting,granites,granitethick,granitephoto, thick
-from routes import imagekit
-from routes import upphoto
+from flask import request, abort
 from routes.getroutes import app
-from core.config import settings
-from flask_sqlalchemy import SQLAlchemy
-from PIL import Image
-import imagekitio
-import tempfile
+from db import tiles, fittings, granitemarbel
 
 
 
 def allowed_file(file):
-    max_size = 10  # 10MB
     if file.filename == "":
         abort(404, description = "File not found")
     allowed_extensions = ['jpg', 'jpeg', 'png', 'jfif']
@@ -22,75 +13,34 @@ def allowed_file(file):
         abort(415, description = "Image can be of jpg/jpeg/png/jfif formats only")
     return True
 
+
+
 @app.route('/upload/tiles/photos/', methods=['POST'])
 def upload_photo():
     product = request.args.get('product', type = str)
     size = request.args.get('size', type = str)
     room = request.args.get('room', type = str)
-    ## Get the unique number for each of the products
-    query = products.query.filter(products.productname == product).first()
-    if not query:
-        abort(404)
-
-    query = sizes.query.filter(sizes.sizes == size).first()
-    if not query:
-        abort(404)
-
-    query = rooms.query.filter(rooms.roomname == room).first()
-    if not query:
-        abort(404)
-
-    tile_type = productroomsize.query.join(products).join(sizes).join(rooms).filter(
-        products.productname == product,
-        rooms.roomname == room,
-        sizes.sizes == size
-    ).first()
-    ## Got the unique number
 
     file = request.files['up_photo']
     if allowed_file(file):
-            # Get the URL of the uploaded image
-        image_url = upphoto.upload_photo(file,"tiles")
-        photo_address = image_url
-        with app.app_context():
-            upload_photo = tilesphotos(photoaddress = photo_address, prsid = tile_type.prsid)
-            db.session.add(upload_photo)
-            db.session.commit()
+        tile = tiles.Tiles(product = product, room = room, size = size, file = file)
+        response = tile.post_tiles()
+        return response
 
-        return { "message": "Photo uploaded successfully" }
+
 
 
 @app.route("/upload/cpfittings/photos/", methods=['POST'])
 def upload_cpfittings_photos():
     product = request.args.get('product', type = str)
     fitting_name = request.args.get('fitting_name', type = str)
-
-    query = products.query.filter(products.productname == product).first()
-    if not query:
-        abort(404, description = "No such product found")
-
-    query = cpfittings.query.filter(cpfittings.fittingname == fitting_name).first()
-    if not query:
-        abort(404, description = "No such CP Fitting and Sanitary item found")
-
-    tile_type = productfitting.query.join(products).join(cpfittings).filter(
-        products.productname == product,
-        cpfittings.fittingname == fitting_name
-    ).first()
-
     up_photo = request.files['up_photo']
     if allowed_file(up_photo):
+        fitting = fittings.Sanitary(product = product, fitting_name = fitting_name, file = up_photo)
+        response = fitting.post_fittings()
+        return response
 
-        # Get the URL of the uploaded image
-        image_url = upphoto.upload_photo(up_photo, "cpphotos")
-        photo_address = image_url
-        with app.app_context():
-            upload_photo = cpphotos(photoaddress = photo_address, pfittingid = tile_type.pfittingid)
-            db.session.add(upload_photo)
-            db.session.commit()
-            db.session.refresh(upload_photo)
 
-        return { "message": "Photo uploaded successfully" }
 
 
 @app.route("/upload/granite&marble/photos/", methods=['POST'])
@@ -98,33 +48,14 @@ def upload_granite_photos():
     product = request.args.get('product', type = str)
     granite = request.args.get('granite', type = str)
     thik = request.args.get('thick', type = str)
-    query = products.query.filter(products.productname == product).first()
-    if not query:
-        abort(404, description = "No such product found")
-
-    query = granites.query.filter(granites.category == granite).first()
-    if not query:
-        abort(404, description = "No such category of granites item found")
-
-    tile_type = granitethick.query.join(products).join(granites).join(thick).filter(
-        products.productname == product
-    ).filter(products.productname==product).filter(granites.category==granite).filter(
-        thick.thick==thik
-    ).first()
-
     file = request.files["up_photo"]
+
     if allowed_file(file = file):
+        gr = granitemarbel.Marbles(product = product, granite = granite, thik = thik, file = file)
+        response = gr.post_granites()
+        return response
 
-        # Get the URL of the uploaded image
-        image_url = upphoto.upload_photo(file, "granitephotos")
-        photo_address = image_url
-        with app.app_context():
-            upload_photo = granitephoto(photoaddress = photo_address, gtid=tile_type.gtid)
-            db.session.add(upload_photo)
-            db.session.commit()
-            db.session.refresh(upload_photo)
 
-    return { "message": "Photo uploaded successfully" }
 
 
 # @router.post("/upload/trending/product/photos/",dependencies = [Depends(deps.get_current_user)])
