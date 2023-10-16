@@ -1,6 +1,7 @@
 from db.model import db,app, products, granites,granitethick,granitephoto, thick
-from flask import abort, Response, json
+from flask import abort, Response, json, jsonify
 from routes import upphoto
+from flask_jwt_extended import jwt_required, current_user
 
 class Marbles:
     def __init__(self, product = None, thik = None, granite = None, file = None):
@@ -9,7 +10,13 @@ class Marbles:
         self.granite = granite
         self.file = file
 
+    @jwt_required()
     def post_granites(self):
+        user = current_user
+        if not user:
+            return jsonify({ "error": "User doesn't exist" }), 400
+        if not user.issuperuser:
+            return jsonify({ "error": "User not authorized to modify" }), 401
         product = self.product
         granite = self.granite
         thik = self.thik

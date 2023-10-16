@@ -1,6 +1,7 @@
 from flask import request, abort
 from routes.getroutes import app
 from db import tiles, fittings, granitemarbel
+from flask_jwt_extended import jwt_required
 
 
 
@@ -16,6 +17,7 @@ def allowed_file(file):
 
 
 @app.route('/upload/tiles/photos/', methods=['POST'])
+@jwt_required()
 def upload_photo():
     product = request.args.get('product', type = str)
     size = request.args.get('size', type = str)
@@ -31,6 +33,7 @@ def upload_photo():
 
 
 @app.route("/upload/cpfittings/photos/", methods=['POST'])
+@jwt_required()
 def upload_cpfittings_photos():
     product = request.args.get('product', type = str)
     fitting_name = request.args.get('fitting_name', type = str)
@@ -44,6 +47,7 @@ def upload_cpfittings_photos():
 
 
 @app.route("/upload/granite&marble/photos/", methods=['POST'])
+@jwt_required()
 def upload_granite_photos():
     product = request.args.get('product', type = str)
     granite = request.args.get('granite', type = str)

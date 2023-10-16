@@ -1,6 +1,7 @@
 from db.model import db,app, products, cpfittings, cpphotos, productfitting
-from flask import abort, Response, json
+from flask import abort, Response, json, jsonify
 from routes import upphoto
+from flask_jwt_extended import jwt_required, current_user
 
 class Sanitary:
     def __init__(self, product = None, fitting_name = None, file = None):
@@ -30,8 +31,13 @@ class Sanitary:
                 content_type = 'application/json; charset=utf-8'
             )
 
-
+    @jwt_required()
     def post_fittings(self):
+        user = current_user
+        if not user:
+            return jsonify({ "error": "User doesn't exist" }), 400
+        if not user.issuperuser:
+            return jsonify({ "error": "User not authorized to modify" }), 401
         product = self.product
         fitting_name = self.fitting_name
         file = self.file

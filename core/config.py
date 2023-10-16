@@ -14,5 +14,6 @@ class Settings:
     IMAGEKIT_URL = os.getenv('IMAGEKIT_URL')
     SUPER_PASSWORD = os.getenv('SUPER_PASSWORD')
     SUPER_USER = os.getenv('SUPER_USER')
+    SECRET_KEY = os.getenv('SECRET_KEY')
 
 settings = Settings()
