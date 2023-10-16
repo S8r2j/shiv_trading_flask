@@ -1,9 +1,10 @@
-from routes.postroutes import app
+from db.model import app
 from flask import abort, jsonify
 from db import model
 from db import schemas, tokencrud
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import jwt_required, current_user
+from core.config import settings
 
 
 

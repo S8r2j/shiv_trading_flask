@@ -2,14 +2,15 @@ from db.model import db,app, products, granites,granitethick,granitephoto, thick
 from flask import abort, Response, json, jsonify
 from routes import upphoto
 from flask_jwt_extended import jwt_required, current_user
+from trends.trend import Trending
 
 class Marbles:
-    def __init__(self, product = None, thik = None, granite = None, file = None):
+    def __init__(self, product = None, thik = None, granite = None, file = None, trend = None):
         self.product = product
         self.thik   = thik
         self.granite = granite
         self.file = file
-
+        self.trend = trend
     @jwt_required()
     def post_granites(self):
         user = current_user
@@ -38,12 +39,18 @@ class Marbles:
         image_url = upphoto.upload_photo(file, "granitephotos")
         photo_address = image_url
         with app.app_context():
-            upload_photo = granitephoto(photoaddress = photo_address, gtid = tile_type.gtid)
-            db.session.add(upload_photo)
-            db.session.commit()
-            db.session.refresh(upload_photo)
-
-        return { "message": "Photo uploaded successfully" }
+            try:
+                upload_photo = granitephoto(photoaddress = photo_address, gtid = tile_type.gtid)
+                db.session.add(upload_photo)
+                db.session.commit()
+                db.session.refresh(upload_photo)
+                if self.trend == "True":
+                    product = Trending()
+                    response = product.post_trending_products(photourl = photo_address)
+                    return response
+                return "Photo uploaded successfully"
+            except Exception as e:
+                return jsonify({"error":f"{str(e)}"}), 500
 
     def get_granites(self):
         granite = self.granite

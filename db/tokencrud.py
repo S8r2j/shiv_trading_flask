@@ -1,4 +1,5 @@
-from flask import jsonify
+import datetime
+
 from core.config import settings
 from db import model
 
@@ -11,7 +12,7 @@ jwt = JWTManager(app)
 class Token:
 
     def generate_token(self, identity):
-        token = create_access_token(identity = identity)
+        token = create_access_token(identity = identity, expires_delta = datetime.timedelta(minutes = 30))
         return token
 
 @jwt.user_identity_loader

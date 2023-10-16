@@ -13,3 +13,6 @@ class user(BaseModel):
 class login(BaseModel):
     phonenumber:str
     password:str
+
+class url(BaseModel):
+    photoaddress:str

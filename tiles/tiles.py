@@ -1,14 +1,16 @@
-from db.model import db,app, products, sizes, rooms, tilesphotos, productroomsize
+from db.model import db,app, products, sizes, rooms, tilesphotos, productroomsize, trendingproduct
 from flask import abort, Response, json, jsonify
 from routes import upphoto
 from flask_jwt_extended import jwt_required, current_user
+from trends.trend import Trending
 
 class Tiles:
-    def __init__(self, product = None, size = None, room = None, file = None):
+    def __init__(self, product = None, size = None, room = None, file = None, trend = None):
         self.product = product
         self.size = size
         self.room = room
         self.file = file
+        self.trend = trend
     def get_tiles(self):
         product = self.product
         size = self.size
@@ -162,7 +164,7 @@ class Tiles:
         product = self.product
         size = self.size
         room = self.room
-
+        trend = self.trend
         query = products.query.filter(products.productname == product).first()
         if not query:
             abort(404)
@@ -190,6 +192,10 @@ class Tiles:
                 upload_photo = tilesphotos(photoaddress = photo_address, prsid = tile_type.prsid)
                 db.session.add(upload_photo)
                 db.session.commit()
+                if trend == "True":
+                    product = Trending()
+                    response = product.post_trending_products(photourl = photo_address)
+                    return response
+                return "Photo uploaded successfully"
             except Exception as e:
-                abort(500, description = f"{str(e)}")
-        return "Photo updated successfully"
+                return jsonify({"error":f"{str(e)}"}), 500

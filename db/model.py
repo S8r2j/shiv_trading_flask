@@ -14,7 +14,7 @@ class user(db.Model):
     phonenumber = db.Column(db.String(11), unique=True, nullable=False)
     plan=db.Column(db.String(20),nullable=False)
     issuperuser=db.Column(db.Boolean, default = False)
-    login = db.relationship('login', backref = 'user', lazy=True)
+    login = db.relationship('login', backref = 'relation', lazy=True)
 
 
 class login(db.Model):
@@ -96,7 +96,7 @@ class granitephoto(db.Model):
 
 class trendingproduct(db.Model):
     tpid=db.Column(db.Integer,autoincrement = True,primary_key = True)
-    photoaddress=db.Column(db.Text,nullable = False)
+    photoaddress=db.Column(db.Text,nullable = False, unique = True)
 
 
 class basicfinish(db.Model):

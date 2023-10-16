@@ -2,12 +2,14 @@ from db.model import db,app, products, cpfittings, cpphotos, productfitting
 from flask import abort, Response, json, jsonify
 from routes import upphoto
 from flask_jwt_extended import jwt_required, current_user
+from trends.trend import Trending
 
 class Sanitary:
-    def __init__(self, product = None, fitting_name = None, file = None):
+    def __init__(self, product = None, fitting_name = None, file = None, trend = None):
         self.product = product
         self.fitting_name =fitting_name
         self.file = file
+        self.trend = trend
 
     def get_fittings(self):
         fittingname = self.fitting_name
@@ -57,9 +59,15 @@ class Sanitary:
         image_url = upphoto.upload_photo(up_photo, "cpphotos")
         photo_address = image_url
         with app.app_context():
-            upload_photo = cpphotos(photoaddress = photo_address, pfittingid = tile_type.pfittingid)
-            db.session.add(upload_photo)
-            db.session.commit()
-            db.session.refresh(upload_photo)
-
-        return { "message": "Photo uploaded successfully" }
+            try:
+                upload_photo = cpphotos(photoaddress = photo_address, pfittingid = tile_type.pfittingid)
+                db.session.add(upload_photo)
+                db.session.commit()
+                db.session.refresh(upload_photo)
+                if self.trend == "True":
+                    product = Trending()
+                    response = product.post_trending_products(photourl = photo_address)
+                    return response
+                return "Photo uploaded successfully"
+            except Exception as e:
+                return jsonify({"error":f"{str(e)}"}), 500

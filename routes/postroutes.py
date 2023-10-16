@@ -1,75 +1,22 @@
-from flask import request, abort
-from routes.getroutes import app
-from db import tiles, fittings, granitemarbel
-from flask_jwt_extended import jwt_required
-
+from flask import jsonify
 
 
 def allowed_file(file):
     if file.filename == "":
-        abort(404, description = "File not found")
+        jsonify({"error": "File not found"}), 400
     allowed_extensions = ['jpg', 'jpeg', 'png', 'jfif']
     filename,extension = file.filename.lower().split('.')
     if extension not in allowed_extensions:
-        abort(415, description = "Image can be of jpg/jpeg/png/jfif formats only")
+        jsonify({"error":"Image format should be of format jpg/jpeg/png/jfif"}), 415
     return True
 
-
-
-@app.route('/upload/tiles/photos/', methods=['POST'])
-@jwt_required()
-def upload_photo():
-    product = request.args.get('product', type = str)
-    size = request.args.get('size', type = str)
-    room = request.args.get('room', type = str)
-
-    file = request.files['up_photo']
-    if allowed_file(file):
-        tile = tiles.Tiles(product = product, room = room, size = size, file = file)
-        response = tile.post_tiles()
-        return response
-
-
-
-
-@app.route("/upload/cpfittings/photos/", methods=['POST'])
-@jwt_required()
-def upload_cpfittings_photos():
-    product = request.args.get('product', type = str)
-    fitting_name = request.args.get('fitting_name', type = str)
-    up_photo = request.files['up_photo']
-    if allowed_file(up_photo):
-        fitting = fittings.Sanitary(product = product, fitting_name = fitting_name, file = up_photo)
-        response = fitting.post_fittings()
-        return response
-
-
-
-
-@app.route("/upload/granite&marble/photos/", methods=['POST'])
-@jwt_required()
-def upload_granite_photos():
-    product = request.args.get('product', type = str)
-    granite = request.args.get('granite', type = str)
-    thik = request.args.get('thick', type = str)
-    file = request.files["up_photo"]
-
-    if allowed_file(file = file):
-        gr = granitemarbel.Marbles(product = product, granite = granite, thik = thik, file = file)
-        response = gr.post_granites()
-        return response
-
-
-
-
-# @router.post("/upload/trending/product/photos/",dependencies = [Depends(deps.get_current_user)])
-# async def upload_trending_photos(up_photo:UploadFile=File(...),user:model.user=Depends(deps.get_current_user),db:Session=Depends(dbconnect.get_database)):
-#     user = db.query(model.user).filter(
-#         model.user.phone_number == user.phone_number,
-#         model.user.is_superuser == True
-#     ).first()
-#     if not user or not user.is_superuser:
-#         raise HTTPException(status_code = status.HTTP_403_FORBIDDEN, detail = "Unauthorized attempt to make changes")
+# @app.route("/upload/trending/product/photos/",methods = ['POST'])
+# async def upload_trending_photos(up_photo:UploadFile=File(...)):
+#     usersdir = current_user
+#     if not usersdir:
+#         return jsonify({ "error": "User doesn't exist" }), 400
+#     if not usersdir.issuperuser:
+#         return jsonify({ "error": "User not authorized to modify" }), 401
 #
 #     validate_photo(up_photo)
 #     image_data = await up_photo.read()
@@ -92,15 +39,15 @@ def upload_granite_photos():
 #     return { "message": "Photo uploaded successfully",
 #              "photo url":photo_address
 #              }
-#
+
 #
 # @router.post("/upload/finish/photos/",dependencies = [Depends(deps.get_current_user)])
-# async def upload_finish_photos(plan:str,up_photo:UploadFile=File(...),db:Session=Depends(dbconnect.get_database),user:model.user=Depends(deps.get_current_user)):
-#     user = db.query(model.user).filter(
-#         model.user.phone_number == user.phone_number,
-#         model.user.is_superuser == True
+# async def upload_finish_photos(plan:str,up_photo:UploadFile=File(...),db:Session=Depends(dbconnect.get_database),usersdir:model.usersdir=Depends(deps.get_current_user)):
+#     usersdir = db.query(model.usersdir).filter(
+#         model.usersdir.phone_number == usersdir.phone_number,
+#         model.usersdir.is_superuser == True
 #     ).first()
-#     if not user or not user.is_superuser:
+#     if not usersdir or not usersdir.is_superuser:
 #         raise HTTPException(status_code = status.HTTP_403_FORBIDDEN, detail = "Unauthorized attempt to make changes")
 #     validate_photo(up_photo)
 #

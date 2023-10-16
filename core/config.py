@@ -15,5 +15,10 @@ class Settings:
     SUPER_PASSWORD = os.getenv('SUPER_PASSWORD')
     SUPER_USER = os.getenv('SUPER_USER')
     SECRET_KEY = os.getenv('SECRET_KEY')
+    OWNER_EMAIL = os.getenv('OWNER_EMAIL')
+    OWNER_PHONE = os.getenv('OWNER_PHONE')
+    OWNER_COUNTRY = os.getenv('OWNER_COUNTRY')
+    OWNER_PLAN = os.getenv('OWNER_PLAN')
+    OWNER_PASSWORD = os.getenv('OWNER_PASSWORD')
 
 settings = Settings()
