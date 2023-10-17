@@ -5,6 +5,7 @@ from tiles.routes import tirouter
 from usersdir.routes import router
 from usersdir import create_owner
 from trends.routes import trendrouter
+from finishes.routes import finishrouter
 
 create_owner()
 
@@ -13,6 +14,7 @@ app.register_blueprint(firouter)
 app.register_blueprint(tirouter)
 app.register_blueprint(router)
 app.register_blueprint(trendrouter)
+app.register_blueprint(finishrouter)
 
 
 if __name__ == "__main__":

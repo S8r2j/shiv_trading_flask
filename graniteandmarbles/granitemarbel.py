@@ -112,7 +112,10 @@ class Marbles:
                         "url": row.photoaddress
                     }
                     details.append(ls)
-                return details
+                return Response(
+                    json.dumps(details, ensure_ascii = False).encode('utf-8'),
+                    content_type = 'application/json; charset=utf-8'
+                )
             if not granite and not thik:
                 url = granitephoto.query.join(granitethick).all()
                 details = []
@@ -125,6 +128,9 @@ class Marbles:
                         "url": row.photoaddress
                     }
                     details.append(ls)
-                return details
+                return Response(
+                    json.dumps(details, ensure_ascii = False).encode('utf-8'),
+                    content_type = 'application/json; charset=utf-8'
+                )
         except Exception as e:
             return str(e)
