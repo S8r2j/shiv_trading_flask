@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, current_user
 from finishes.finish import Finishing
-from routes.postroutes import allowed_file
+from routes.utils import allowed_file
 
 finishrouter = Blueprint('finishes', __name__)
 
@@ -27,9 +27,10 @@ def upload_finish_photos():
     if not user.issuperuser:
         return jsonify({ "error": "User not authorized to modify" }), 401
     plan = request.args.get('plan', type = str)
+    description = request.form['description']
     file = request.files['up_photo']
     if allowed_file(file):
-        finish = Finishing(plan = plan)
+        finish = Finishing(plan = plan, description = description)
         response = finish.post_finish_photos(file = file)
         print(response)
         return response

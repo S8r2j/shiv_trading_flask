@@ -1,6 +1,6 @@
 from flask import jsonify, request, Blueprint
 from flask_jwt_extended import jwt_required, current_user
-from routes.postroutes import allowed_file
+from routes.utils import allowed_file
 from tiles import tiles
 
 tirouter = Blueprint('tiles', __name__)
@@ -17,9 +17,10 @@ def upload_photo():
     size = request.args.get('size', type = str)
     room = request.args.get('room', type = str)
     trending = request.args.get('trending', type=str)
+    description = request.form['description']
     file = request.files['up_photo']
     if allowed_file(file):
-        tile = tiles.Tiles(product = product, room = room, size = size, file = file, trend = trending)
+        tile = tiles.Tiles(product = product, room = room, size = size, file = file, trend = trending, description = description)
         response = tile.post_tiles()
         return response
 

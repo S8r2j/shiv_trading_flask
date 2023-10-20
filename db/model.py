@@ -54,6 +54,8 @@ class productroomsize(db.Model):
 class tilesphotos(db.Model):
     photoid=db.Column(db.Integer,primary_key = True)
     photoaddress=db.Column(db.Text,nullable = False,unique = True)
+    imagekitid=db.Column(db.Text, nullable = False, unique = True)
+    description=db.Column(db.Text, nullable = True)
     prsid=db.Column(db.Integer, db.ForeignKey('productroomsize'))
 
 
@@ -67,6 +69,8 @@ class productfitting(db.Model):
 class cpphotos(db.Model):
     cpid=db.Column(db.Integer,primary_key = True)
     photoaddress=db.Column(db.Text,nullable = False)
+    imagekitid=db.Column(db.Text, nullable = False, unique = True)
+    description = db.Column(db.Text, nullable = True)
     pfittingid=db.Column(db.Integer,db.ForeignKey("productfitting"))
 
 
@@ -91,6 +95,8 @@ class granitethick(db.Model):
 class granitephoto(db.Model):
     gpid=db.Column(db.Integer,autoincrement = True,primary_key = True)
     photoaddress=db.Column(db.Text,nullable = False)
+    imagekitid=db.Column(db.Text, nullable = False, unique = True)
+    description = db.Column(db.Text, nullable = True)
     gtid=db.Column(db.Integer,db.ForeignKey("granitethick"))
 
 
@@ -102,16 +108,22 @@ class trendingproduct(db.Model):
 class basicfinish(db.Model):
     bfid=db.Column(db.Integer,autoincrement = True,primary_key = True)
     photoaddress=db.Column(db.Text,nullable = False)
+    imagekitid=db.Column(db.Text, nullable = False, unique = True)
+    description = db.Column(db.Text, nullable = True)
 
 
 class standardfinish(db.Model):
     sfid=db.Column(db.Integer,autoincrement = True,primary_key = True)
     photoaddress=db.Column(db.Text,nullable = False)
+    imagekitid=db.Column(db.Text, nullable = False, unique = True)
+    description = db.Column(db.Text, nullable = True)
 
 
 class premiumfinish(db.Model):
     pfid=db.Column(db.Integer,autoincrement = True,primary_key = True)
     photoaddress=db.Column(db.Text,nullable = False)
+    imagekitid=db.Column(db.Text, nullable = False, unique = True)
+    description = db.Column(db.Text, nullable = True)
 
 
 with app.app_context():

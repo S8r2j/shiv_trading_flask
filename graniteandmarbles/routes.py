@@ -1,7 +1,7 @@
 from flask import jsonify, request, Blueprint
 from flask_jwt_extended import jwt_required, current_user
 from graniteandmarbles import granitemarbel
-from routes.postroutes import allowed_file
+from routes.utils import allowed_file
 
 grrouter = Blueprint('graniteandmarbles', __name__)
 
@@ -17,10 +17,11 @@ def upload_granite_photos():
     granite = request.args.get('granite', type = str)
     thik = request.args.get('thick', type = str)
     trending = request.args.get('trending', type = str)
+    description = request.form['description']
     file = request.files["up_photo"]
 
     if allowed_file(file = file):
-        gr = granitemarbel.Marbles(product = product, granite = granite, thik = thik, file = file, trend = trending)
+        gr = granitemarbel.Marbles(product = product, granite = granite, thik = thik, file = file, trend = trending, description = description)
         response = gr.post_granites()
         return response
 

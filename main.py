@@ -6,6 +6,9 @@ from usersdir.routes import router
 from usersdir import create_owner
 from trends.routes import trendrouter
 from finishes.routes import finishrouter
+from flask_cors import CORS
+
+CORS(app)
 
 create_owner()
 

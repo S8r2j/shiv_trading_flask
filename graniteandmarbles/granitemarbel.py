@@ -5,12 +5,13 @@ from flask_jwt_extended import jwt_required, current_user
 from trends.trend import Trending
 
 class Marbles:
-    def __init__(self, product = None, thik = None, granite = None, file = None, trend = None):
+    def __init__(self, product = None, thik = None, granite = None, file = None, trend = None, description = None):
         self.product = product
         self.thik   = thik
         self.granite = granite
         self.file = file
         self.trend = trend
+        self.description = description
     @jwt_required()
     def post_granites(self):
         user = current_user
@@ -22,6 +23,7 @@ class Marbles:
         granite = self.granite
         thik = self.thik
         file = self.file
+        description = self.description
         query = products.query.filter(products.productname == product).first()
         if not query:
             abort(404, description = "No such product found")
@@ -36,11 +38,13 @@ class Marbles:
             thick.thick == thik
         ).first()
 
-        image_url = upphoto.upload_photo(file, "granitephotos")
+        url = upphoto.upload_photo(file, "granitephotos")
+        image_url = url["url"]
+        file_id = url["file_id"]
         photo_address = image_url
         with app.app_context():
             try:
-                upload_photo = granitephoto(photoaddress = photo_address, gtid = tile_type.gtid)
+                upload_photo = granitephoto(photoaddress = photo_address, gtid = tile_type.gtid, imagekitid = file_id, description = description)
                 db.session.add(upload_photo)
                 db.session.commit()
                 db.session.refresh(upload_photo)
@@ -79,6 +83,8 @@ class Marbles:
                             "size": thik,
                             "url": photo.photoaddress
                         }
+                        if photo.description:
+                            ls["description"] = photo.description
                         details.append(ls)
                 return Response(
                     json.dumps(details, ensure_ascii = False).encode('utf-8'),
@@ -93,6 +99,8 @@ class Marbles:
                             "size": thik,
                             "url": photo.photoaddress
                         }
+                        if photo.description:
+                            ls["description"] = photo.description
                         details.append(ls)
                 return Response(
                     json.dumps(details, ensure_ascii = False).encode('utf-8'),
@@ -111,11 +119,11 @@ class Marbles:
                         "size": size.thick,
                         "url": row.photoaddress
                     }
+                    if row.description:
+                        ls["description"] = row.description
                     details.append(ls)
                 return Response(
-                    json.dumps(details, ensure_ascii = False).encode('utf-8'),
-                    content_type = 'application/json; charset=utf-8'
-                )
+                    json.dumps(details, ensure_ascii = False).encode('utf-8'),content_type = 'application/json; charset=utf-8')
             if not granite and not thik:
                 url = granitephoto.query.join(granitethick).all()
                 details = []
@@ -127,6 +135,8 @@ class Marbles:
                         "size": size.thick,
                         "url": row.photoaddress
                     }
+                    if row.description:
+                        ls["description"] = row.description
                     details.append(ls)
                 return Response(
                     json.dumps(details, ensure_ascii = False).encode('utf-8'),

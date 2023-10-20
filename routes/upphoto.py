@@ -2,7 +2,7 @@ import tempfile
 from flask import abort
 from routes import imagekit
 
-def upload_photo(file,folder)->str:
+def upload_photo(file,folder)->dict:
     class Object:
         def __init__(self):
             self.folder = f'/{folder}/'
@@ -21,4 +21,10 @@ def upload_photo(file,folder)->str:
         abort(500, description = {"error":str(e)})
     temp_file.close()
     url_str = str(upload_response.url)
-    return url_str
+    return {
+        "url": url_str,
+        "file_id": upload_response.file_id
+    }
+
+def delete_photos(url):
+    pass

@@ -5,12 +5,13 @@ from flask_jwt_extended import jwt_required, current_user
 from trends.trend import Trending
 
 class Tiles:
-    def __init__(self, product = None, size = None, room = None, file = None, trend = None):
+    def __init__(self, product = None, size = None, room = None, file = None, trend = None, description = None):
         self.product = product
         self.size = size
         self.room = room
         self.file = file
         self.trend = trend
+        self.description = description
     def get_tiles(self):
         product = self.product
         size = self.size
@@ -42,6 +43,8 @@ class Tiles:
                             "size": size,
                             "url": row.photoaddress
                         }
+                        if row.description:
+                            ls["description"] = row.description
                         details.append(ls)
                     return Response(json.dumps(details, ensure_ascii=False).encode('utf-8'), content_type='application/json; charset=utf-8')
                 if not size and product != None and not product.isspace() and room != None and not room.isspace():
@@ -59,6 +62,8 @@ class Tiles:
                                 "size": size.sizes,
                                 "url": photo.photoaddress
                             }
+                            if row.description:
+                                ls["description"] = row.description
                             details.append(ls)
                     return Response(json.dumps(details, ensure_ascii=False).encode('utf-8'), content_type='application/json; charset=utf-8')
                 if not room and product != None and not product.isspace() and size != None and not size.isspace():
@@ -74,6 +79,8 @@ class Tiles:
                                 "size": size,
                                 "url": photo.photoaddress
                             }
+                            if row.description:
+                                ls["description"] = row.description
                             details.append(ls)
                     return Response(json.dumps(details, ensure_ascii=False).encode('utf-8'), content_type='application/json; charset=utf-8')
                 if not room and not size and product != None and not product.isspace():
@@ -90,6 +97,8 @@ class Tiles:
                                 "size": size.sizes,
                                 "url": photo.photoaddress
                             }
+                            if row.description:
+                                ls["description"] = row.description
                             details.append(ls)
                     return Response(json.dumps(details, ensure_ascii=False).encode('utf-8'), content_type='application/json; charset=utf-8')
                 if not product and size != None and not size.isspace() and room != None and not room.isspace():
@@ -103,6 +112,8 @@ class Tiles:
                                 "size": size,
                                 "url": photo.photoaddress
                             }
+                            if row.description:
+                                ls["description"] = row.description
                             details.append(ls)
                     return Response(json.dumps(details, ensure_ascii=False).encode('utf-8'), content_type='application/json; charset=utf-8')
                 if not product and not size and room != None and not room.isspace():
@@ -119,6 +130,8 @@ class Tiles:
                                 "size": size.sizes,
                                 "url": photo.photoaddress
                             }
+                            if row.description:
+                                ls["description"] = row.description
                             details.append(ls)
                     return Response(json.dumps(details, ensure_ascii=False).encode('utf-8'), content_type='application/json; charset=utf-8')
                 if not product and not room and size != None and not size.isspace():
@@ -132,6 +145,8 @@ class Tiles:
                                 "size": size,
                                 "url": photo.photoaddress
                             }
+                            if row.description:
+                                ls["description"] = row.description
                             details.append(ls)
                     return Response(json.dumps(details, ensure_ascii=False).encode('utf-8'), content_type='application/json; charset=utf-8')
                 if not product and not room and not size:
@@ -146,6 +161,8 @@ class Tiles:
                                 "size": size.sizes,
                                 "url": photo.photoaddress
                             }
+                            if row.description:
+                                ls["description"] = row.description
                             details.append(ls)
                     return Response(
                             json.dumps(details, ensure_ascii = False).encode('utf-8'),
@@ -165,6 +182,7 @@ class Tiles:
         size = self.size
         room = self.room
         trend = self.trend
+        description = self.description
         query = products.query.filter(products.productname == product).first()
         if not query:
             abort(404)
@@ -185,11 +203,13 @@ class Tiles:
 
         file = self.file
 
-        image_url = upphoto.upload_photo(file, "tiles")
+        url = upphoto.upload_photo(file, "tiles")
+        image_url = url["url"]
+        file_id = url["file_id"]
         photo_address = image_url
         with app.app_context():
             try:
-                upload_photo = tilesphotos(photoaddress = photo_address, prsid = tile_type.prsid)
+                upload_photo = tilesphotos(photoaddress = photo_address, prsid = tile_type.prsid, imagekitid = file_id, description = description)
                 db.session.add(upload_photo)
                 db.session.commit()
                 if trend == "True":

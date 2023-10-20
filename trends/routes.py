@@ -1,7 +1,7 @@
 from flask import jsonify, request, Blueprint
 from flask_jwt_extended import jwt_required, current_user
 from db import schemas
-from routes.postroutes import allowed_file
+from routes.utils import allowed_file
 from db.model import trendingproduct
 from trends.trend import Trending
 

@@ -5,8 +5,9 @@ from routes import upphoto
 
 
 class Finishing:
-    def __init__(self, plan):
+    def __init__(self, plan, description = None):
         self.plan = plan
+        self.description = description
 
     @jwt_required()
     def get_finish_photos(self):
@@ -20,7 +21,12 @@ class Finishing:
             finish = []
             if query:
                 for row in query:
-                    finish.append(row.photoaddress)
+                    ls = {
+                        "url":row.photoaddress
+                    }
+                    if row.description:
+                        ls["description"]= row.description
+                    finish.append(ls)
                 return Response(
                     json.dumps(finish, ensure_ascii = False).encode('utf-8'),
                     content_type = 'application/json; charset=utf-8'
@@ -32,7 +38,12 @@ class Finishing:
             finish = []
             if query:
                 for row in query:
-                    finish.append(row.photoaddress)
+                    ls = {
+                        "url": row.photoaddress
+                    }
+                    if row.description:
+                        ls["description"] = row.description
+                    finish.append(ls)
                 return Response(
                     json.dumps(finish, ensure_ascii = False).encode('utf-8'),
                     content_type = 'application/json; charset=utf-8'
@@ -44,7 +55,12 @@ class Finishing:
             finish = []
             if query:
                 for row in query:
-                    finish.append(row.photoaddress)
+                    ls = {
+                        "url": row.photoaddress
+                    }
+                    if row.description:
+                        ls["description"] = row.description
+                    finish.append(ls)
                 return Response(
                     json.dumps(finish, ensure_ascii = False).encode('utf-8'),
                     content_type = 'application/json; charset=utf-8'
@@ -60,23 +76,30 @@ class Finishing:
         if not user.issuperuser:
             return jsonify({ "error": "User not authorized to modify" }), 401
         with app.app_context():
+            description = self.description
             if self.plan == "Basic":
-                image_url = upphoto.upload_photo(file, "basic_finish")
-                finish = basicfinish(photoaddress = image_url)
+                url = upphoto.upload_photo(file, "basic_finish")
+                image_url = url["url"]
+                file_id = url["file_id"]
+                finish = basicfinish(photoaddress = image_url, imagekitid = file_id, description = description)
                 db.session.add(finish)
                 db.session.commit()
                 db.session.refresh(finish)
                 return "Uploaded photo of basic finish category"
             if self.plan == "Standard":
-                image_url = upphoto.upload_photo(file, "standard_finish")
-                finish = standardfinish(photoaddress = image_url)
+                url = upphoto.upload_photo(file, "standard_finish")
+                image_url = url["url"]
+                file_id = url["file_id"]
+                finish = standardfinish(photoaddress = image_url, imagekitid = file_id, description = description)
                 db.session.add(finish)
                 db.session.commit()
                 db.session.refresh(finish)
                 return "Uploaded photo of standard finish category"
             if self.plan == "Premium":
-                image_url = upphoto.upload_photo(file, "premium_finish")
-                finish = premiumfinish(photoaddress = image_url)
+                url = upphoto.upload_photo(file, "premium_finish")
+                image_url = url["url"]
+                file_id = url["file_id"]
+                finish = premiumfinish(photoaddress = image_url, imagekitid = file_id, description = description)
                 db.session.add(finish)
                 db.session.commit()
                 db.session.refresh(finish)

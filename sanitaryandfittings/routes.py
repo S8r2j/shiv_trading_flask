@@ -1,6 +1,6 @@
 from flask import jsonify, request, Blueprint
 from flask_jwt_extended import jwt_required, current_user
-from routes.postroutes import allowed_file
+from routes.utils import allowed_file
 from sanitaryandfittings import fittings
 
 firouter = Blueprint('sanitaryandfittings', __name__)
@@ -16,9 +16,10 @@ def upload_cpfittings_photos():
     product = request.args.get('product', type = str)
     fitting_name = request.args.get('fitting_name', type = str)
     trending = request.args.get('trending', type = str)
+    description = request.form['description']
     up_photo = request.files['up_photo']
     if allowed_file(up_photo):
-        fitting = fittings.Sanitary(product = product, fitting_name = fitting_name, file = up_photo, trend = trending)
+        fitting = fittings.Sanitary(product = product, fitting_name = fitting_name, file = up_photo, trend = trending, description = description)
         response = fitting.post_fittings()
         return response
 
