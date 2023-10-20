@@ -62,7 +62,7 @@ class Tiles:
                                 "size": size.sizes,
                                 "url": photo.photoaddress
                             }
-                            if row.description:
+                            if photo.description:
                                 ls["description"] = row.description
                             details.append(ls)
                     return Response(json.dumps(details, ensure_ascii=False).encode('utf-8'), content_type='application/json; charset=utf-8')
@@ -79,7 +79,7 @@ class Tiles:
                                 "size": size,
                                 "url": photo.photoaddress
                             }
-                            if row.description:
+                            if photo.description:
                                 ls["description"] = row.description
                             details.append(ls)
                     return Response(json.dumps(details, ensure_ascii=False).encode('utf-8'), content_type='application/json; charset=utf-8')
@@ -97,7 +97,7 @@ class Tiles:
                                 "size": size.sizes,
                                 "url": photo.photoaddress
                             }
-                            if row.description:
+                            if photo.description:
                                 ls["description"] = row.description
                             details.append(ls)
                     return Response(json.dumps(details, ensure_ascii=False).encode('utf-8'), content_type='application/json; charset=utf-8')
@@ -112,7 +112,8 @@ class Tiles:
                                 "size": size,
                                 "url": photo.photoaddress
                             }
-                            if row.description:
+                            print(photo.description)
+                            if photo.description:
                                 ls["description"] = row.description
                             details.append(ls)
                     return Response(json.dumps(details, ensure_ascii=False).encode('utf-8'), content_type='application/json; charset=utf-8')
@@ -130,7 +131,7 @@ class Tiles:
                                 "size": size.sizes,
                                 "url": photo.photoaddress
                             }
-                            if row.description:
+                            if photo.description:
                                 ls["description"] = row.description
                             details.append(ls)
                     return Response(json.dumps(details, ensure_ascii=False).encode('utf-8'), content_type='application/json; charset=utf-8')
@@ -145,7 +146,7 @@ class Tiles:
                                 "size": size,
                                 "url": photo.photoaddress
                             }
-                            if row.description:
+                            if photo.description:
                                 ls["description"] = row.description
                             details.append(ls)
                     return Response(json.dumps(details, ensure_ascii=False).encode('utf-8'), content_type='application/json; charset=utf-8')
@@ -161,7 +162,7 @@ class Tiles:
                                 "size": size.sizes,
                                 "url": photo.photoaddress
                             }
-                            if row.description:
+                            if photo.description:
                                 ls["description"] = row.description
                             details.append(ls)
                     return Response(

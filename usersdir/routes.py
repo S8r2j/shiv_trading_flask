@@ -24,7 +24,7 @@ def create_user():
     except Exception as e:
         return {"error":f"{str(e)}"}
 
-@router.route("/login/", methods = ['GET'])
+@router.route("/login/", methods = ['GET', 'POST'])
 def login_func():
 
         login_credentials = schemas.login(**request.get_json())
