@@ -1,5 +1,5 @@
 import datetime
-
+from flask import jsonify
 from core.config import settings
 from db import model
 
@@ -24,7 +24,11 @@ def user_lookup_callback(_jwt_header, jwt_data):
     identity = jwt_data["sub"]
     with app.app_context():
         query = model.user.query.join(model.login).filter(model.login.sn == identity).first()
-        if not query:
+        if query is None:
             return None
         else:
-            return query
+            if datetime.datetime.utcnow()>query.expiresat and not query.issuperuser:
+                return jsonify({'error':'Your subscription is over. Please contact Shiv Trading and Tiles for renewal'}), 403
+            else:
+                print(query.email)
+                return query

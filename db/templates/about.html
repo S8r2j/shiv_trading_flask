@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About Our Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        h1 {
+            color: #007BFF;
+            font-size: 24px;
+        }
+
+        p {
+            color: #333;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .columns {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .column {
+            width: 48%;
+        }
+
+        .endpoints-container, .functions-container {
+            text-align: left;
+        }
+
+        .endpoint-item, .function-item {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>About Our Website</h1>
+        <p>Welcome to the heart of Shiv Trading Tiles' online operations! Our backend department is the powerhouse behind our seamless and efficient business processes. Our exceptional backend is crafted with Flask, a renowned Python framework that ensures reliability, speed, and robust performance. We pride ourselves in delivering a hassle-free experience for our customers, thanks to our meticulously designed RESTful API. It enables lightning-fast data transactions and empowers you to effortlessly navigate our product range and services.</p>
+
+        <div class="columns">
+            <div class="column">
+                <h2>API Endpoints</h2>
+                <div class="endpoints-container">
+                    {% for endpoint, function in endpoints_data.items() %}
+                        <div class="endpoint-item">{{ loop.index }}. {{ endpoint }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="column">
+                <h2>Functions</h2>
+                <div class="functions-container">
+                    {% for endpoint, function in endpoints_data.items() %}
+                        <div class="function-item"> {{ function }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <p class="thank-you" style="font-size: 12px;">Feel free to <a class="highlight" href="https://www.linkedin.com/in/suraj-sharma-a049a31a8/" target="_blank">get in touch</a> with the developer. I am looking forward to serve you!</p>
+    </div>
+</body>
+</html>

@@ -33,3 +33,16 @@ def get_tiles_photos():
     tile = tiles.Tiles(product = product, size = size, room = room)
     response = tile.get_tiles()
     return response
+
+@tirouter.route("/delete/tiles/photos/", methods = ['DELETE'])
+@jwt_required()
+def del_tiles_photos():
+    user = current_user
+    if not user:
+        return jsonify({ "error": "User doesn't exist" }), 400
+    if not user.issuperuser:
+        return jsonify({ "error": "User not authorized to modify" }), 401
+    url = request.form['url']
+    tyl = tiles.Tiles()
+    response = tyl.remove_tiles_photos(url = url)
+    return response

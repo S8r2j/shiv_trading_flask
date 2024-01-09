@@ -1,5 +1,5 @@
 import tempfile
-from flask import abort
+from flask import abort, jsonify
 from routes import imagekit
 
 def upload_photo(file,folder)->dict:
@@ -26,5 +26,9 @@ def upload_photo(file,folder)->dict:
         "file_id": upload_response.file_id
     }
 
-def delete_photos(url):
-    pass
+def delete_photos(fileid):
+    try:
+        delete = imagekit.delete_file(file_id = fileid)
+        return "Deleted Successfully"
+    except Exception as e:
+        return jsonify(f"error: {str(e)}"), 500

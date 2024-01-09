@@ -30,3 +30,17 @@ def get_cpfitting_photos():
     fitting = fittings.Sanitary(fitting_name = fittingname)
     response = fitting.get_fittings()
     return response
+
+
+@firouter.route("/delete/cpfitting/photos/", methods = ['DELETE'])
+@jwt_required()
+def del_cpfitting_photos():
+    user = current_user
+    if not user:
+        return jsonify({ "error": "User doesn't exist" }), 400
+    if not user.issuperuser:
+        return jsonify({ "error": "User not authorized to modify" }), 401
+    url = request.form['url']
+    cp = fittings.Sanitary()
+    response = cp.remove_cpfitting_photos(url = url)
+    return response

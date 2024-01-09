@@ -75,6 +75,9 @@ class Finishing:
             return jsonify({ "error": "User doesn't exist" }), 400
         if not user.issuperuser:
             return jsonify({ "error": "User not authorized to modify" }), 401
+        plan_list = ['Basic', 'Standard', 'Premium']
+        if self.plan not in plan_list:
+            return jsonify({'error':'No such plan exists'}),400
         with app.app_context():
             description = self.description
             if self.plan == "Basic":

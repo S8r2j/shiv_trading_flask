@@ -1,9 +1,13 @@
+from datetime import datetime, timedelta
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from core.config import settings
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"]= f"mysql+pymysql://{settings.DATABASE_USER}:{settings.DATABASE_PASSWORD}@{settings.DATABASE_HOST}:{settings.DATABASE_PORT}/{settings.DATABASE_NAME}?charset=utf8"
+app.config["SQLALCHEMY_POOL_SIZE"] = 5
+app.config["SQLALCHEMY_POOL_RECYCLE"] = 3600
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 
@@ -14,6 +18,8 @@ class user(db.Model):
     phonenumber = db.Column(db.String(11), unique=True, nullable=False)
     plan=db.Column(db.String(20),nullable=False)
     issuperuser=db.Column(db.Boolean, default = False)
+    createdat = db.Column(db.DateTime, default = datetime.utcnow(), nullable = False)
+    expiresat = db.Column(db.DateTime, default = lambda: datetime.utcnow()+ timedelta(days = 28), nullable = False)
     login = db.relationship('login', backref = 'relation', lazy=True)
 
 

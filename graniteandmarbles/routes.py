@@ -33,3 +33,17 @@ def get_granite_photos():
     gr = granitemarbel.Marbles(granite = granite, thik = thik)
     response = gr.get_granites()
     return response
+
+
+@grrouter.route("/delete/granite/photos/", methods = ['DELETE'])
+@jwt_required()
+def del_granite_photos():
+    user = current_user
+    if not user:
+        return jsonify({ "error": "User doesn't exist" }), 400
+    if not user.issuperuser:
+        return jsonify({ "error": "User not authorized to modify" }), 401
+    url = request.form['url']
+    cls = granitemarbel.Marbles()
+    response = cls.remove_granite_photos(url = url)
+    return response

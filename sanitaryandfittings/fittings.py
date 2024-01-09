@@ -85,3 +85,19 @@ class Sanitary:
                 return "Photo uploaded successfully"
             except Exception as e:
                 return jsonify({"error":f"{str(e)}"}), 500
+
+
+    @jwt_required()
+    def remove_cpfitting_photos(self, url):
+        user = current_user
+        if not user:
+            return jsonify({ "error": "User doesn't exist" }), 400
+        if not user.issuperuser:
+            return jsonify({ "error": "User not authorized to modify" }), 401
+        query = cpphotos.query.filter(cpphotos.photoaddress == url).first()
+        if not query:
+            return jsonify({ "error": "No such url found" }), 400
+        response = upphoto.delete_photos(query.imagekitid)
+        db.session.delete(query)
+        db.session.commit()
+        return response

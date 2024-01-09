@@ -63,7 +63,7 @@ class Tiles:
                                 "url": photo.photoaddress
                             }
                             if photo.description:
-                                ls["description"] = row.description
+                                ls["description"] = photo.description
                             details.append(ls)
                     return Response(json.dumps(details, ensure_ascii=False).encode('utf-8'), content_type='application/json; charset=utf-8')
                 if not room and product != None and not product.isspace() and size != None and not size.isspace():
@@ -80,7 +80,7 @@ class Tiles:
                                 "url": photo.photoaddress
                             }
                             if photo.description:
-                                ls["description"] = row.description
+                                ls["description"] = photo.description
                             details.append(ls)
                     return Response(json.dumps(details, ensure_ascii=False).encode('utf-8'), content_type='application/json; charset=utf-8')
                 if not room and not size and product != None and not product.isspace():
@@ -98,7 +98,7 @@ class Tiles:
                                 "url": photo.photoaddress
                             }
                             if photo.description:
-                                ls["description"] = row.description
+                                ls["description"] = photo.description
                             details.append(ls)
                     return Response(json.dumps(details, ensure_ascii=False).encode('utf-8'), content_type='application/json; charset=utf-8')
                 if not product and size != None and not size.isspace() and room != None and not room.isspace():
@@ -114,7 +114,7 @@ class Tiles:
                             }
                             print(photo.description)
                             if photo.description:
-                                ls["description"] = row.description
+                                ls["description"] = photo.description
                             details.append(ls)
                     return Response(json.dumps(details, ensure_ascii=False).encode('utf-8'), content_type='application/json; charset=utf-8')
                 if not product and not size and room != None and not room.isspace():
@@ -132,7 +132,7 @@ class Tiles:
                                 "url": photo.photoaddress
                             }
                             if photo.description:
-                                ls["description"] = row.description
+                                ls["description"] = photo.description
                             details.append(ls)
                     return Response(json.dumps(details, ensure_ascii=False).encode('utf-8'), content_type='application/json; charset=utf-8')
                 if not product and not room and size != None and not size.isspace():
@@ -147,7 +147,7 @@ class Tiles:
                                 "url": photo.photoaddress
                             }
                             if photo.description:
-                                ls["description"] = row.description
+                                ls["description"] = photo.description
                             details.append(ls)
                     return Response(json.dumps(details, ensure_ascii=False).encode('utf-8'), content_type='application/json; charset=utf-8')
                 if not product and not room and not size:
@@ -163,7 +163,7 @@ class Tiles:
                                 "url": photo.photoaddress
                             }
                             if photo.description:
-                                ls["description"] = row.description
+                                ls["description"] = photo.description
                             details.append(ls)
                     return Response(
                             json.dumps(details, ensure_ascii = False).encode('utf-8'),
@@ -220,3 +220,18 @@ class Tiles:
                 return "Photo uploaded successfully"
             except Exception as e:
                 return jsonify({"error":f"{str(e)}"}), 500
+
+    @jwt_required()
+    def remove_tiles_photos(self, url):
+        user = current_user
+        if not user:
+            return jsonify({ "error": "User doesn't exist" }), 400
+        if not user.issuperuser:
+            return jsonify({ "error": "User not authorized to modify" }), 401
+        query = tilesphotos.query.filter(tilesphotos.photoaddress == url).first()
+        if not query:
+            return jsonify({ "error": "No such url found" }),400
+        response = upphoto.delete_photos(query.imagekitid)
+        db.session.delete(query)
+        db.session.commit()
+        return response
